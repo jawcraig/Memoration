@@ -1,11 +1,37 @@
 {
-  "name": "emery",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "Memoration",
+  "version": "0.0.1",
+  "description": "A game of horror.",
+  "author": {
+    "name": "jawcraig",
+    "email": "jawcraig+github@gmail.com"
+  },
+  "contributors": {
+    "name": "Eli"
+  },
+  "main": "index",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC"
+  "keywords": [
+    "survival",
+    "horror",
+    "game",
+    "puzzle",
+    "room",
+    "escape"
+  ],
+  "bugs": {
+    "url": "https://github.com/jawcraig/memoration/issues",
+    "email": "jawcraig+github@gmail.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jawcraig/memoration.git"
+  },
+  "devDependencies": {
+    "karma-qunit": "^1.2.1",
+    "qunitjs": "^2.0.1"
+  }
 }
