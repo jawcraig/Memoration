@@ -1,63 +1,58 @@
-document.addEventListener("DOMContentLoaded", function(event) {
-    var renderer;
-    var self = this;
+var engine = (function() {
+  var scene = null;
+  var objects = [];
+  var controls = setupControls();
 
-    scene = null;
-    objects = [];
+  var renderer;
 
-    var blocker = document.getElementById( 'blocker' );
-    var instructions = document.getElementById( 'instructions' );
-    var element = document.getElementById('container');
+  var blocker = document.getElementById( 'blocker' );
+  var instructions = document.getElementById( 'instructions' );
+  var element = document.getElementById('container');
 
-    var controls = setupControls();
 
-    obtainPointerLock(element, blocker, instructions);
-    views = [
-    {
-      left: 0,
-      bottom: 0,
-      width: 0.5,
-      height: 1.0,
-      background: new THREE.Color().setRGB( 0.5, 0.5, 0.7 ),
-      eye: [ 0, 0, 0 ],
-      up: [ 0, 1, 0 ],
-      fov: 45,
-      updateCamera: function ( camera, scene ) {
-        camera.lookAt( scene.position );
-      }
-    },
-    {
-      left: 0.5,
-      bottom: 0,
-      width: 0.5,
-      height: 0.5,
-      background: new THREE.Color().setRGB( 0.7, 0.5, 0.5 ),
-      eye: [ 0, 500, 0 ],
-      up: [ 0, 0, 1 ],
-      fov: 45,
-      updateCamera: function ( camera, scene ) {
-        camera.lookAt( camera.position.clone().setY( 0 ) );
-      }
-    },
-    {
-      left: 0.5,
-      bottom: 0.5,
-      width: 0.5,
-      height: 0.5,
-      background: new THREE.Color().setRGB( 0.5, 0.7, 0.7 ),
-      eye: [ -200, 400, -200 ],
-      up: [ 0, 1, 0 ],
-      fov: 90,
-      updateCamera: function ( camera, scene ) {
-        camera.lookAt( scene.position );
-      }
+  var views = [
+  {
+    left: 0,
+    bottom: 0,
+    width: 0.5,
+    height: 1.0,
+    background: new THREE.Color().setRGB( 0.5, 0.5, 0.7 ),
+    eye: [ 0, 0, 0 ],
+    up: [ 0, 1, 0 ],
+    fov: 45,
+    updateCamera: function ( camera, scene ) {
+      camera.lookAt( scene.position );
     }
+  },
+  {
+    left: 0.5,
+    bottom: 0,
+    width: 0.5,
+    height: 0.5,
+    background: new THREE.Color().setRGB( 0.7, 0.5, 0.5 ),
+    eye: [ 0, 500, 0 ],
+    up: [ 0, 0, 1 ],
+    fov: 45,
+    updateCamera: function ( camera, scene ) {
+      camera.lookAt( camera.position.clone().setY( 0 ) );
+    }
+  },
+  {
+    left: 0.5,
+    bottom: 0.5,
+    width: 0.5,
+    height: 0.5,
+    background: new THREE.Color().setRGB( 0.5, 0.7, 0.7 ),
+    eye: [ -200, 400, -200 ],
+    up: [ 0, 1, 0 ],
+    fov: 90,
+    updateCamera: function ( camera, scene ) {
+      camera.lookAt( scene.position );
+    }
+  }
   ];
 
-  init();
-  animate();
-
-  function init() {
+  var init = function() {
     initViews(views);
 
     scene = window.getSceneCell(20);
@@ -66,18 +61,18 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     var camera = views[0].camera;
     bindControls(scene, camera, controls);
-  }
+  };
 
-  function createRenderer() {
+  var createRenderer = function() {
     var renderer = new THREE.WebGLRenderer();
     renderer.setClearColor( 0xffffff );
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
     document.body.appendChild( renderer.domElement );
     return renderer;
-  }
+  };
 
-  function paintFrustum(object) {
+  var paintFrustum = function(object) {
     var camera = views[0].camera;
     var frustum = new THREE.Frustum();
     frustum.setFromMatrix( new THREE.Matrix4().multiplyMatrices( camera.projectionMatrix, camera.matrixWorldInverse ) );
@@ -105,23 +100,23 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
 
     console.log("out " + outcount + " in " + incount);
-  }
+  };
 
-  function initViews(views) {
+  var initViews = function(views) {
     for (var ii =  0; ii < views.length; ++ii ) {
-        var view = views[ii];
-        var camera = new THREE.PerspectiveCamera( view.fov, window.innerWidth / window.innerHeight, 1, 5000 );
-        camera.position.x = view.eye[ 0 ];
-        camera.position.y = view.eye[ 1 ];
-        camera.position.z = view.eye[ 2 ];
-        camera.up.x = view.up[ 0 ];
-        camera.up.y = view.up[ 1 ];
-        camera.up.z = view.up[ 2 ];
-        view.camera = camera;
-      }
-  }
+      var view = views[ii];
+      var camera = new THREE.PerspectiveCamera( view.fov, window.innerWidth / window.innerHeight, 1, 5000 );
+      camera.position.x = view.eye[ 0 ];
+      camera.position.y = view.eye[ 1 ];
+      camera.position.z = view.eye[ 2 ];
+      camera.up.x = view.up[ 0 ];
+      camera.up.y = view.up[ 1 ];
+      camera.up.z = view.up[ 2 ];
+      view.camera = camera;
+    }
+  };
 
-  function renderView(view) {
+  var renderView = function(view) {
     camera = view.camera;
 
     view.updateCamera( camera, scene );
@@ -144,9 +139,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
     paintFrustum();
 
     renderer.render( scene, camera );
-  }
+  };
 
-  function animate() {
+  var animate = function() {
     requestAnimationFrame( animate );
 
     handleControls(controls, objects);
@@ -155,9 +150,21 @@ document.addEventListener("DOMContentLoaded", function(event) {
       view = views[ii];
       renderView(view);
     }
-  }
+  };
 
-  window.setScene = function(number) {
+  var setScene = function(number) {
     scene = getCell(number);
   };
-});
+
+  var run = function() {
+    obtainPointerLock(element, blocker, instructions);
+    init();
+    animate();
+  };
+
+  return {
+      animate: this.animate,
+      setScene: this.setScene,
+      view: this.view,
+  };
+})();

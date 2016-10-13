@@ -14,6 +14,7 @@ var setupControls = function() {
     prevTime: performance.now(),
     velocity: new THREE.Vector3(),
     raycaster: new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0, 10 ),
+
     jump: function() {
         if ( controls.canJump === true ) {
           controls.velocity.y += 350;
@@ -99,7 +100,7 @@ var obtainPointerLock = function(element, blocker, instructions) {
 // Bind controls to camera & scene
 var bindControls = function(scene, camera, controls) {
   controls.camera = camera;
-  controls.controls = new THREE.PointerLockControls( camera );
+  controls.controls = new PointerLockControls( camera );
   controls.controls.enabled = controls.enabled;
 
   scene.add( controls.controls.getObject() );
@@ -135,6 +136,7 @@ var onKeyDown = function( event ) {
 
       case 32: // space
         controls.jump();
+        grue();
         break;
     }
 };

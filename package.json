@@ -10,8 +10,18 @@
     "name": "Eli"
   },
   "main": "index",
+  "testling": {
+    "harness": "mocha-tdd",
+    "files": "test/*.js",
+    "browsers": [
+      "chrome/latest",
+      "firefox/latest"
+    ]
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "browserify --debug --standalone app app.js -o build/bundle.js",
+    "test": "mocha --ui tdd",
+    "testling": "testling"
   },
   "keywords": [
     "survival",
@@ -31,6 +41,8 @@
     "url": "https://github.com/jawcraig/memoration.git"
   },
   "devDependencies": {
+    "eslint": "^3.7.1",
+    "eslint-config-google": "^0.6.0",
     "karma-qunit": "^1.2.1",
     "qunitjs": "^2.0.1"
   }
